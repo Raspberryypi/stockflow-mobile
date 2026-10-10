@@ -7,6 +7,8 @@ import '../../features/dashboard/dashboard_screen.dart';
 import '../../features/placeholder/not_found_screen.dart';
 import '../../features/placeholder/placeholder_screen.dart';
 import '../../features/products/products_screen.dart';
+import '../../features/scan/scan_screen.dart';
+import '../../features/transactions/transactions_screen.dart';
 import '../../features/shell/main_shell.dart';
 import '../../features/shell/more_screen.dart';
 import '../../providers/auth_provider.dart';
@@ -71,7 +73,7 @@ GoRouter buildRouter(AuthProvider auth) {
             GoRoute(path: '/dashboard', builder: (_, __) => const DashboardScreen()),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/scan', builder: (_, __) => const PlaceholderScreen('Scan Product', icon: Icons.qr_code_scanner_rounded)),
+            GoRoute(path: '/scan', builder: (_, __) => const ScanScreen()),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(
@@ -84,7 +86,7 @@ GoRouter buildRouter(AuthProvider auth) {
             ),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/transactions', builder: (_, __) => const PlaceholderScreen('Transactions', icon: Icons.swap_horiz_rounded)),
+            GoRoute(path: '/transactions', builder: (_, __) => const TransactionsScreen()),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(
