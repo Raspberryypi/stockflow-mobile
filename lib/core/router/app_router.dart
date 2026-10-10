@@ -6,6 +6,7 @@ import '../../features/auth/register_screen.dart';
 import '../../features/dashboard/dashboard_screen.dart';
 import '../../features/placeholder/not_found_screen.dart';
 import '../../features/placeholder/placeholder_screen.dart';
+import '../../features/products/products_screen.dart';
 import '../../features/shell/main_shell.dart';
 import '../../features/shell/more_screen.dart';
 import '../../providers/auth_provider.dart';
@@ -73,7 +74,14 @@ GoRouter buildRouter(AuthProvider auth) {
             GoRoute(path: '/scan', builder: (_, __) => const PlaceholderScreen('Scan Product', icon: Icons.qr_code_scanner_rounded)),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/products', builder: (_, __) => const PlaceholderScreen('Products', icon: Icons.inventory_2_rounded)),
+            GoRoute(
+              path: '/products',
+              // Deep links: ?status=Low+Stock (notification bell), ?view=<id> (search).
+              builder: (_, state) => ProductsScreen(
+                initialStatus: state.uri.queryParameters['status'],
+                viewId: state.uri.queryParameters['view'],
+              ),
+            ),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(path: '/transactions', builder: (_, __) => const PlaceholderScreen('Transactions', icon: Icons.swap_horiz_rounded)),
