@@ -12,11 +12,9 @@ class ProductService {
   static Future<Map<String, dynamic>> updateProduct(String id, Map<String, dynamic> payload) =>
       _api.put('/products/$id', payload);
 
-  /// Archives the product (soft delete). Reversible via [restoreProduct].
   static Future<Map<String, dynamic>> deleteProduct(String id) => _api.delete('/products/$id');
   static Future<Map<String, dynamic>> restoreProduct(String id) => _api.post('/products/$id/restore');
 
-  /// Irreversible. Only works on an already-archived product.
   static Future<Map<String, dynamic>> permanentlyDeleteProduct(String id) =>
       _api.delete('/products/$id/permanent');
 

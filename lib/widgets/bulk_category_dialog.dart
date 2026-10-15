@@ -3,10 +3,6 @@ import '../core/network/api_client.dart';
 import '../core/theme/palette.dart';
 import 'app_alert.dart';
 
-/// Port of components/products/BulkCategoryDialog.jsx.
-/// Moves a batch of selected products into one chosen category.
-/// [onConfirm] does the request; the dialog closes on success and shows the
-/// error inline on failure.
 Future<void> showBulkCategoryDialog(
   BuildContext context, {
   required int count,

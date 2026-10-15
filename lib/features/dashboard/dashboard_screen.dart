@@ -8,8 +8,6 @@ import 'dashboard_cards.dart';
 import 'greeting_header.dart';
 import 'stat_card.dart';
 
-/// Port of pages/dashboard/Dashboard.jsx: stat cards, inventory-by-category
-/// chart, low/out-of-stock list and recent transactions. Pull down to refresh.
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
 
@@ -30,7 +28,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<void> _load() async {
     setState(() {
-      _loading = _stats == null; // skeleton only on the very first load
+      _loading = _stats == null;
       _error = '';
     });
     try {
@@ -109,7 +107,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 StatGrid(cards: cards),
                 const SizedBox(height: 16),
                 LayoutBuilder(builder: (context, constraints) {
-                  // Wide screens: chart and low-stock side by side (web: lg:grid-cols-12).
                   if (constraints.maxWidth >= 800) {
                     return Row(
                       crossAxisAlignment: CrossAxisAlignment.start,

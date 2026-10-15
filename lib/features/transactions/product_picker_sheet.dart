@@ -6,9 +6,6 @@ import '../../services/product_service.dart';
 import '../../widgets/product_thumb.dart';
 import '../../widgets/status_chip.dart';
 
-/// Replaces the web's Autocomplete: a searchable bottom sheet that queries
-/// the server as you type (so it works with catalogs bigger than 100 items).
-/// Returns the chosen product map, or null if dismissed.
 Future<Map<String, dynamic>?> showProductPicker(BuildContext context) {
   return showModalBottomSheet<Map<String, dynamic>>(
     context: context,
@@ -48,7 +45,7 @@ class _ProductPickerSheetState extends State<_ProductPickerSheet> {
   }
 
   void _onChanged(String value) {
-    setState(() {}); // refresh the clear button
+    setState(() {});
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 300), () => _search(value.trim()));
   }

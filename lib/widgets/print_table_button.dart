@@ -6,16 +6,6 @@ import '../core/utils/print_table.dart';
 import '../providers/auth_provider.dart';
 import 'app_alert.dart';
 
-/// Port of components/common/PrintTableButton.jsx: one Print button for any
-/// list. Prints a black-and-white report of the rows [getRows] returns.
-///
-///   getRows    fetch EVERYTHING matching the list's current filters (not
-///              just what's loaded). Gets the chosen From/To dates.
-///   dateOf     the date the From/To range filters on
-///   dateLabel  names that date in the header ("created", "archived", ...)
-///
-/// Modes: default asks for a date range first; [fixedRange] prints straight
-/// away with that range in the header; [snapshot] prints "As of now".
 class PrintTableButton<T> extends StatefulWidget {
   const PrintTableButton({
     super.key,
@@ -84,9 +74,6 @@ class _PrintTableButtonState<T> extends State<PrintTableButton<T>> {
   }
 }
 
-/// The Print flow behind [PrintTableButton], for screens that start it from
-/// a menu instead. Shows the date-range dialog unless [fixedRange] or
-/// [snapshot] is set; errors without a dialog appear as a snackbar.
 Future<void> startPrintTable<T>(
   BuildContext context, {
   required String title,
@@ -104,7 +91,6 @@ Future<void> startPrintTable<T>(
   final needsDialog = !snapshot && fixedRange == null;
   final printedBy = context.read<AuthProvider>().user?.name ?? '';
 
-  // Fetches, filters and prints. Returns an error message, or null on success.
   Future<String?> run(String from, String to) async {
     try {
       var rows = await getRows(from, to);

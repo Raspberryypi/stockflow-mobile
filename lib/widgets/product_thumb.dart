@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/theme/palette.dart';
 
-/// Product picture with a placeholder icon when there is no image (or it
-/// fails to load). Mirrors the Avatar used in ProductTable.jsx.
 class ProductThumb extends StatelessWidget {
   const ProductThumb({super.key, this.url, this.size = 48, this.radius = 10});
   final String? url;

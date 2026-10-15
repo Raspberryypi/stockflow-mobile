@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import '../core/theme/palette.dart';
 import 'app_alert.dart';
 
-/// Small building blocks shared by the "More" list pages
-/// (Categories, Locations, Purchase Orders, Users).
-
-/// Search box with a clear (x) button.
 class ListSearchField extends StatelessWidget {
   const ListSearchField({
     super.key,
@@ -41,7 +37,6 @@ class ListSearchField extends StatelessWidget {
   }
 }
 
-/// Port of components/common/ArchiveViewToggle.jsx.
 class ArchiveViewToggle extends StatelessWidget {
   const ArchiveViewToggle({super.key, required this.archived, required this.onChanged});
   final bool archived;
@@ -66,7 +61,6 @@ class ArchiveViewToggle extends StatelessWidget {
   }
 }
 
-/// Loading skeleton / error / empty states for a pull-to-refresh list.
 class ListStatus extends StatelessWidget {
   const ListStatus.loading({super.key, this.padding = _pad})
       : error = '',
@@ -136,7 +130,6 @@ class ListStatus extends StatelessWidget {
   }
 }
 
-/// One row of a list page: title, optional subtitle lines, trailing widget.
 class ListRowCard extends StatelessWidget {
   const ListRowCard({
     super.key,
@@ -203,7 +196,6 @@ class ListRowCard extends StatelessWidget {
   }
 }
 
-/// Small rounded label (MUI `<Chip size="small">`), tone-colored.
 class SmallChip extends StatelessWidget {
   const SmallChip(this.label, {super.key, this.color, this.outlined = false});
   final String label;
@@ -230,7 +222,6 @@ class SmallChip extends StatelessWidget {
   }
 }
 
-/// Shows a floating message (the web's `<Snackbar>`).
 void showSnack(BuildContext context, String message) {
   ScaffoldMessenger.of(context)
     ..hideCurrentSnackBar()

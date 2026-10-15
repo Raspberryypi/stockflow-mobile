@@ -9,7 +9,6 @@ class TransactionService {
   static Future<Map<String, dynamic>> createTransaction(Map<String, dynamic> payload) =>
       _api.post('/transactions', payload);
 
-  /// Moves stock between locations (total quantity unchanged).
   static Future<Map<String, dynamic>> transferStock(Map<String, dynamic> payload) =>
       _api.post('/transactions/transfer', payload);
 }

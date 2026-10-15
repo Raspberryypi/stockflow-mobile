@@ -26,7 +26,6 @@ import 'product_tile.dart';
 
 const _pageSize = 10;
 
-/// A sort choice = field + direction (the web sorts by clicking column headers).
 class _SortOption {
   const _SortOption(this.label, this.by, this.order);
   final String label;
@@ -45,11 +44,6 @@ const _sortOptions = [
   _SortOption('Quantity: high to low', 'quantity', 'desc'),
 ];
 
-/// Port of pages/products/ProductList.jsx for mobile.
-///
-/// Deep links (from the notification bell / global search):
-///   /products?status=Low+Stock  -> opens with that status filter
-///   /products?view=<id>         -> opens that product's details page
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({super.key, this.initialStatus, this.viewId});
   final String? initialStatus;
@@ -64,7 +58,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
   final _searchCtl = TextEditingController();
   Timer? _debounce;
 
-  // Filters / sort (same fields as useProducts.js).
   String _search = '';
   String _category = '';
   String _status = '';
@@ -73,7 +66,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
   String _sortOrder = 'desc';
   bool _archived = false;
 
-  // Data.
   List<Map<String, dynamic>> _categories = [];
   List<Map<String, dynamic>> _products = [];
   int _page = 1;
@@ -84,7 +76,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
   String _error = '';
   int _reqId = 0; // ignore responses from superseded requests
 
-  // Bulk selection (admin, normal view only).
   final Set<String> _selected = {};
 
   String? _openingViewId;
@@ -127,8 +118,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
     super.dispose();
   }
 
-  // ── Loading ────────────────────────────────────────────────────
-
   Future<void> _loadCategories() async {
     try {
       final res = await CategoryService.getCategories();
@@ -153,7 +142,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
     return params;
   }
 
-  /// Loads page 1 and replaces the list (used for every filter/sort change).
   Future<void> _load() async {
     final id = ++_reqId;
     setState(() {
@@ -171,7 +159,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
         _page = 1;
         _totalPages = totalPages < 1 ? 1 : totalPages;
         _total = pg['total'] == null ? list.length : toNum(pg['total']).toInt();
-        // Selection is a subset of what's on screen: reset it with the list.
         _selected.clear();
       });
     } catch (e) {
@@ -182,7 +169,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
     }
   }
 
-  /// Appends the next page (infinite scroll replaces the web's pagination bar).
   Future<void> _loadMore() async {
     if (_loading || _loadingMore || _page >= _totalPages) return;
     final id = _reqId;
@@ -206,8 +192,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
     if (_scroll.position.pixels >= _scroll.position.maxScrollExtent - 300) _loadMore();
   }
 
-  // ── Small helpers ──────────────────────────────────────────────
-
   void _snack(String message) {
     if (!mounted) return;
     final messenger = ScaffoldMessenger.of(context);
@@ -217,7 +201,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   void _onSearchChanged(String value) {
-    setState(() {}); // refresh the clear (x) button
+    setState(() {});
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 400), () {
       final q = value.trim();
@@ -273,7 +257,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
     _load();
   }
 
-  /// Switching tabs changes the query (archived defaults to newest-archived first).
   void _setArchived(bool archived) {
     if (archived == _archived) return;
     setState(() {
@@ -284,8 +267,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
     });
     _load();
   }
-
-  // ── Navigation: details / add / edit ───────────────────────────
 
   void _maybeOpenView() {
     final id = widget.viewId;
@@ -303,7 +284,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
     if (!mounted) return;
     if (fromLink) {
-      // Drop ?view= from the URL so the same product can be opened again later.
       _openingViewId = null;
       context.go('/products');
     }
@@ -322,8 +302,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
       _load();
     }
   }
-
-  // ── Row actions ────────────────────────────────────────────────
 
   void _onMenu(Map<String, dynamic> product, ProductMenuAction action) {
     switch (action) {
@@ -364,7 +342,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
       _snack('${res['message'] ?? 'Product restored'}');
       _load();
     } catch (e) {
-      // e.g. SKU now used by an active product, or its category is archived
       _snack(apiErrorMessage(e, 'Failed to restore product'));
     }
   }
@@ -382,14 +359,11 @@ class _ProductsScreenState extends State<ProductsScreen> {
           _snack('${res['message'] ?? 'Product deleted'}');
           _load();
         } catch (e) {
-          // e.g. blocked because the product has transaction history
           _snack(apiErrorMessage(e, 'Failed to delete product permanently'));
         }
       },
     );
   }
-
-  // ── Selection / bulk actions ───────────────────────────────────
 
   void _toggleSelect(String id) {
     setState(() {
@@ -438,9 +412,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
-  // ── Export / import / print (ProductList.jsx toolbar) ──────────
-
-  /// Every product matching the current filters, not just the loaded pages.
   Future<List<Map<String, dynamic>>> _fetchAllMatching(int limit) async {
     final params = _params(1)
       ..remove('page')
@@ -533,8 +504,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
       landscape: true,
     );
   }
-
-  // ── UI ─────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {
@@ -743,7 +712,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   }
 
   Widget _buildList(AppPalette p, bool isAdmin) {
-    const padding = EdgeInsets.fromLTRB(16, 8, 16, 96); // room for the FAB
+    const padding = EdgeInsets.fromLTRB(16, 8, 16, 96);
 
     if (_loading && _products.isEmpty) {
       return ListView.separated(

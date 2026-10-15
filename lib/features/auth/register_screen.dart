@@ -16,9 +16,6 @@ import 'password_strength_meter.dart';
 import 'social_login.dart';
 import 'terms_dialog.dart';
 
-// Names may contain letters (any language), spaces, periods, apostrophes and
-// hyphens - no digits or other symbols. Keep in sync with NAME_REGEX in
-// server/validators/authValidators.js.
 final _nameDisallowed = RegExp(r"[^\p{L}\p{M}\s.'’-]", unicode: true);
 final _nameValid = RegExp(r"^[\p{L}\p{M}][\p{L}\p{M}\s.'’-]*$", unicode: true);
 
@@ -35,11 +32,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _password = TextEditingController();
   final _confirm = TextEditingController();
 
-  bool _otpStep = false; // false = sign-up form, true = enter the emailed code
+  bool _otpStep = false;
   String _pendingEmail = '';
   int _resendCooldown = 60;
   bool _agreed = false;
-  // The checkbox stays locked until the Terms have been opened at least once.
   bool _termsOpened = false;
   String _error = '';
   bool _submitting = false;
@@ -84,7 +80,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Future<void> _openTerms() async {
     setState(() => _termsOpened = true);
     final agreed = await showTermsDialog(context);
-    // "I agree" inside the dialog ticks the checkbox.
     if (agreed && mounted) {
       setState(() {
         _agreed = true;
@@ -161,7 +156,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
             controller: _name,
             textInputAction: TextInputAction.next,
             autofillHints: const [AutofillHints.name],
-            // Strip disallowed characters (including digits) as the user types or pastes.
             inputFormatters: [FilteringTextInputFormatter.deny(_nameDisallowed)],
           ),
           AuthField(

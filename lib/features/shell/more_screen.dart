@@ -15,7 +15,6 @@ class _MoreItem {
   final bool adminOnly;
 }
 
-// The sidebar items that don't fit in the bottom bar.
 const _items = [
   _MoreItem('Categories', '/more/categories', Icons.category_rounded),
   _MoreItem('Locations', '/more/locations', Icons.place_rounded),
@@ -25,7 +24,6 @@ const _items = [
   _MoreItem('Users', '/more/users', Icons.people_rounded, adminOnly: true),
 ];
 
-/// The sidebar's user card + remaining nav items + logout.
 class MoreScreen extends StatelessWidget {
   const MoreScreen({super.key});
 
@@ -39,7 +37,6 @@ class MoreScreen extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
-        // User card (same look as the sidebar profile block)
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           decoration: BoxDecoration(
@@ -101,7 +98,6 @@ class MoreScreen extends StatelessWidget {
               message: "You'll need to sign in again to access ${AppConfig.brandName}.",
               confirmLabel: 'Log out',
               destructive: false,
-              // The router redirects to /login as soon as the session clears.
               onConfirm: () => context.read<AuthProvider>().logout(),
             ),
           ),

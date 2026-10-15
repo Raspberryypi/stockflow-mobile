@@ -1,12 +1,8 @@
 import '../../widgets/transaction_type_chip.dart' show kTypeLabel;
 import 'format.dart';
 
-/// Port of utils/csvExport.js + utils/csvImport.js.
-/// Writes and reads the same format, so an exported file re-imports cleanly.
-
 String _escapeCell(Object? value) {
   final str = '${value ?? ''}';
-  // Quote any cell containing a comma, quote, or newline, per CSV convention.
   return RegExp(r'[",\n]').hasMatch(str) ? '"${str.replaceAll('"', '""')}"' : str;
 }
 
@@ -50,15 +46,12 @@ String transactionsToCsv(List<Map<String, dynamic>> transactions) => _buildCsv(
       ],
     );
 
-/// Splits CSV text into rows of cells. Handles quoted cells containing
-/// commas, newlines and escaped quotes.
 List<List<String>> parseCsvRows(String text) {
   final rows = <List<String>>[];
   var row = <String>[];
   final cell = StringBuffer();
   var inQuotes = false;
 
-  // Normalize line endings so \r\n from Excel doesn't leave stray \r.
   final input = text.replaceAll('\r\n', '\n').replaceFirst('﻿', '');
 
   for (var i = 0; i < input.length; i++) {
@@ -88,7 +81,6 @@ List<List<String>> parseCsvRows(String text) {
       cell.write(char);
     }
   }
-  // Final cell/row (files don't always end with a trailing newline).
   if (cell.isNotEmpty || row.isNotEmpty) {
     row.add(cell.toString());
     rows.add(row);
@@ -96,7 +88,6 @@ List<List<String>> parseCsvRows(String text) {
   return rows.where((r) => r.length > 1 || r.first.isNotEmpty).toList();
 }
 
-// Export column headers (and a few common aliases) -> bulk-import field names.
 const _headerAliases = {
   'name': 'name',
   'product name': 'name',
@@ -112,9 +103,6 @@ const _headerAliases = {
   'image url': 'imageUrl',
 };
 
-/// Parses a products CSV into row maps ready for
-/// ProductService.bulkImportProducts. Throws [FormatException] with a
-/// readable message when the file can't be used.
 List<Map<String, dynamic>> parseProductsCsv(String text) {
   final rows = parseCsvRows(text);
   if (rows.isEmpty) throw const FormatException('The file appears to be empty.');

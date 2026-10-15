@@ -1,4 +1,3 @@
-// Port of src/config/termsContent.js
 const termsLastUpdated = 'October 2026';
 
 const termsSections = <({String title, String body})>[

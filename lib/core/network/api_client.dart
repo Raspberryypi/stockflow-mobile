@@ -3,9 +3,6 @@ import 'package:flutter/foundation.dart';
 import '../config/app_config.dart';
 import '../storage/token_storage.dart';
 
-/// Port of src/services/api.js: one shared Dio instance that
-///  - attaches the JWT to every request
-///  - reports 401s so the app can log the user out globally
 class ApiClient {
   ApiClient._() {
     dio = Dio(BaseOptions(
@@ -24,9 +21,6 @@ class ApiClient {
         handler.next(options);
       },
       onError: (error, handler) {
-        // The server also answers 401 for a wrong password on these two
-        // endpoints. That is a form error, not an expired session, so it
-        // must not log the user out.
         final path = error.requestOptions.path;
         final isCredentialCheck =
             path.endsWith('/auth/login') || path.endsWith('/auth/change-password');
@@ -42,7 +36,6 @@ class ApiClient {
 
   late final Dio dio;
 
-  /// Set by AuthProvider. Called when any request comes back 401.
   VoidCallback? onUnauthorized;
 
   Map<String, dynamic> _map(Response r) => r.data is Map
@@ -64,7 +57,6 @@ class ApiClient {
       _map(await dio.delete(path, queryParameters: params));
 }
 
-/// Equivalent of `err.response?.data?.message || fallback`.
 String apiErrorMessage(Object error,
     [String fallback = 'Something went wrong. Please try again.']) {
   if (error is DioException) {
@@ -85,7 +77,6 @@ String apiErrorMessage(Object error,
   return fallback;
 }
 
-/// Equivalent of `err.response?.data` (used for `retryAfter`).
 Map<String, dynamic>? apiErrorData(Object error) {
   if (error is DioException && error.response?.data is Map) {
     return Map<String, dynamic>.from(error.response!.data as Map);

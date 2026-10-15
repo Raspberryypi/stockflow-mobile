@@ -17,7 +17,7 @@ import '../../widgets/user_avatar.dart';
 class _SortOption {
   const _SortOption(this.label, this.by, this.desc);
   final String label;
-  final String by; // name | email | role | date
+  final String by;
   final bool desc;
 }
 
@@ -30,7 +30,6 @@ const _sortOptions = [
   _SortOption('Role', 'role', false),
 ];
 
-/// Port of pages/users/UserList.jsx (admin only; the router guards it).
 class UsersScreen extends StatefulWidget {
   const UsersScreen({super.key});
 
@@ -76,8 +75,6 @@ class _UsersScreenState extends State<UsersScreen> {
     }
   }
 
-  // The date column is "Joined" in one view and "Archived on" in the other,
-  // so switching views resets to newest-first.
   void _setArchived(bool v) {
     if (v == _archived) return;
     setState(() {
@@ -137,7 +134,6 @@ class _UsersScreenState extends State<UsersScreen> {
           showSnack(context, 'User archived. They can no longer log in; restore them from the Archived tab.');
           _load();
         } catch (e) {
-          // e.g. "at least one active admin account must remain"
           if (mounted) showSnack(context, apiErrorMessage(e, 'Failed to archive user'));
         }
       },

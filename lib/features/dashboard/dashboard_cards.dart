@@ -7,7 +7,6 @@ import '../../widgets/print_table_button.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/transaction_type_chip.dart';
 
-/// Shared "card with a title" frame used by the three dashboard sections.
 class _SectionCard extends StatelessWidget {
   const _SectionCard({required this.title, required this.child, this.action});
   final String title;
@@ -68,7 +67,6 @@ class _EmptyState extends StatelessWidget {
   }
 }
 
-/// Port of InventoryDistributionChart.jsx (donut instead of a pie).
 class InventoryDistributionChart extends StatelessWidget {
   const InventoryDistributionChart({super.key, required this.data});
   final List<Map<String, dynamic>> data;
@@ -147,7 +145,6 @@ class InventoryDistributionChart extends StatelessWidget {
   }
 }
 
-/// Port of LowStockTable.jsx as a list (a 5-column table doesn't fit a phone).
 class LowStockList extends StatelessWidget {
   const LowStockList({super.key, required this.products});
   final List<Map<String, dynamic>> products;
@@ -212,7 +209,6 @@ class LowStockList extends StatelessWidget {
   }
 }
 
-/// Port of RecentTransactions.jsx as a list.
 class RecentTransactionsList extends StatelessWidget {
   const RecentTransactionsList({super.key, required this.transactions});
   final List<Map<String, dynamic>> transactions;

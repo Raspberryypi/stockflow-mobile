@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../core/theme/palette.dart';
 import '../../core/utils/password_strength.dart';
 
-/// Strength meter + requirement checklist (PasswordStrength.jsx).
 class PasswordStrengthMeter extends StatelessWidget {
   const PasswordStrengthMeter({super.key, required this.password});
   final String password;
@@ -10,7 +9,7 @@ class PasswordStrengthMeter extends StatelessWidget {
   Color _barColor(int bars) => switch (bars) {
         1 => AppPalette.error,
         2 => AppPalette.warning,
-        3 => const Color(0xFF81C784), // success.light
+        3 => const Color(0xFF81C784),
         4 => AppPalette.success,
         _ => Colors.grey,
       };
@@ -41,7 +40,6 @@ class PasswordStrengthMeter extends StatelessWidget {
           ],
         );
 
-    // Two columns like `twoColumns` on the web: 3 rules left, 2 right.
     final half = (eval.rules.length / 2).ceil();
     final left = eval.rules.take(half).toList();
     final right = eval.rules.skip(half).toList();

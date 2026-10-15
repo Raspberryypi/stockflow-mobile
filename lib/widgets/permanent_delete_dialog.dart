@@ -4,9 +4,6 @@ import 'app_alert.dart';
 
 const _confirmWord = 'DELETE';
 
-/// Port of components/common/PermanentDeleteDialog.jsx.
-/// Confirmation for an IRREVERSIBLE delete: the admin must type DELETE
-/// before the button enables. Closes itself when [onConfirm] finishes.
 Future<void> showPermanentDeleteDialog(
   BuildContext context, {
   String title = 'Delete permanently?',

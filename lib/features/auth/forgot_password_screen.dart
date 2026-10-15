@@ -14,7 +14,6 @@ import 'password_strength_meter.dart';
 
 final _emailRegex = RegExp(r'^\S+@\S+\.\S+$');
 
-/// Two steps: 1) enter email -> code is emailed, 2) code + new password.
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
 

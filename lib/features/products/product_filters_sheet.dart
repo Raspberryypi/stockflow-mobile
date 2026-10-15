@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 const kProductStatuses = ['In Stock', 'Low Stock', 'Out of Stock', 'Discontinued'];
 
-/// The three dropdown/text filters of ProductFilters.jsx (search lives on the
-/// products screen itself).
 class ProductFilterValues {
   const ProductFilterValues({this.category = '', this.status = '', this.supplier = ''});
   final String category;
@@ -14,8 +12,6 @@ class ProductFilterValues {
       (category.isNotEmpty ? 1 : 0) + (status.isNotEmpty ? 1 : 0) + (supplier.isNotEmpty ? 1 : 0);
 }
 
-/// Bottom sheet with Category / Status / Supplier. Returns the chosen values,
-/// or null if dismissed.
 Future<ProductFilterValues?> showProductFiltersSheet(
   BuildContext context, {
   required List<Map<String, dynamic>> categories,
@@ -52,8 +48,6 @@ class _FiltersSheetState extends State<_FiltersSheet> {
 
   @override
   Widget build(BuildContext context) {
-    // A filtered category might have been archived since: don't crash the
-    // dropdown if its id is no longer in the list.
     final categoryIds = widget.categories.map((c) => '${c['_id']}').toSet();
     final safeCategory = categoryIds.contains(_category) ? _category : '';
 

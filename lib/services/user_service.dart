@@ -4,7 +4,6 @@ class UserService {
   UserService._();
   static final _api = ApiClient.instance;
 
-  /// params: {'archived': true} lists archived (deactivated) users.
   static Future<Map<String, dynamic>> getUsers([Map<String, dynamic>? params]) =>
       _api.get('/users', params: params);
   static Future<Map<String, dynamic>> getUser(String id) => _api.get('/users/$id');

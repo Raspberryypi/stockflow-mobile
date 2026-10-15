@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// Every color from ThemeModeContext.jsx / authTokens.js in one place.
 class AppPalette {
   const AppPalette._(this.dark);
   final bool dark;
@@ -10,7 +9,6 @@ class AppPalette {
   factory AppPalette.forBrightness(Brightness b) =>
       AppPalette._(b == Brightness.dark);
 
-  // ── Brand (same in light and dark) ─────────────────────────────
   static const primary = Color(0xFF2F6F6B);
   static const primaryDark = Color(0xFF1D4E4A);
   static const secondary = Color(0xFF3D5A80);
@@ -24,15 +22,12 @@ class AppPalette {
   static const info = Color(0xFF3E8FB0);
   static const infoDark = Color(0xFF286E8A);
 
-  // Sidebar identity (web) -> app bar + bottom bar (mobile). Constant in both modes.
   static const sidebarBg = Color(0xFF153033);
   static const sidebarBgActive = Color(0xFF28565C);
-  static const sidebarText = Color(0xB3FFFFFF); // white @ 70%
+  static const sidebarText = Color(0xB3FFFFFF);
 
-  // Auth pages
   static const authPanel = Color(0xFF043E50);
 
-  // ── Mode dependent ─────────────────────────────────────────────
   Color get primaryLight => dark ? const Color(0xFF25423F) : const Color(0xFFDCEEEA);
   Color get secondaryLight => dark ? const Color(0xFF28374A) : const Color(0xFFE1E7F0);
   Color get successLight => dark ? const Color(0xFF25402F) : const Color(0xFFE1F3E8);
@@ -48,7 +43,6 @@ class AppPalette {
   Color get tableDivider => dark ? const Color(0xFF233639) : const Color(0xFFE9F0F1);
   Color get shadow => dark ? const Color(0x40000000) : const Color(0x0F0F2D30);
 
-  // ── Auth pages (useAuthColors) ─────────────────────────────────
   Color get authAccent => dark ? const Color(0xFF0E6A85) : authPanel;
   Color get authAccentHover => dark ? const Color(0xFF12809F) : const Color(0xFF03303E);
   Color get authLink => dark ? const Color(0xFF7CC4D6) : authPanel;

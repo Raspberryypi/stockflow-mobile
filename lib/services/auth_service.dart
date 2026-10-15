@@ -4,7 +4,6 @@ class AuthService {
   AuthService._();
   static final _api = ApiClient.instance;
 
-  // Step 1: validates the form and emails a 6-digit code (no account yet).
   static Future<Map<String, dynamic>> register(
           String name, String email, String password, String confirmPassword) =>
       _api.post('/auth/register', {

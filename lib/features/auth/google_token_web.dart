@@ -1,19 +1,12 @@
-// Web implementation: a port of src/components/auth/googleSignIn.js.
-// Loads Google Identity Services and opens the account-chooser popup,
-// resolving with an OAuth access token. This is the same kind of token
-// your website sends, so the server verifies it with no changes.
-
+// ignore_for_file: non_constant_identifier_names
 import 'dart:async';
 import 'dart:js_interop';
 
-/// Thrown when the user closes the Google popup (a cancel, not an error).
 class GoogleCancelled implements Exception {
   const GoogleCancelled();
 }
 
 const _gsiSrc = 'https://accounts.google.com/gsi/client';
-
-// --- Minimal typed views of the browser / Google objects we touch ---------
 
 extension type _Element._(JSObject _) implements JSObject {
   external set src(String value);
@@ -57,12 +50,8 @@ extension type _TokenClient._(JSObject _) implements JSObject {
 @JS('google.accounts.oauth2.initTokenClient')
 external _TokenClient _initTokenClient(_TokenClientConfig config);
 
-// --- Public API ------------------------------------------------------------
-
 Completer<void>? _loading;
 
-/// Loads Google's script once. Call early (page mount) so it is ready by the
-/// time the user clicks: browsers only allow the popup straight from a click.
 Future<void> loadGoogleScript() {
   final existing = _loading;
   if (existing != null) return existing.future;
@@ -82,7 +71,7 @@ Future<void> loadGoogleScript() {
   script.addEventListener(
     'error',
     ((JSAny? _) {
-      _loading = null; // allow a retry on the next click
+      _loading = null;
       if (!completer.isCompleted) {
         completer.completeError(Exception('Could not load Google sign-in.'));
       }
@@ -92,8 +81,6 @@ Future<void> loadGoogleScript() {
   return completer.future;
 }
 
-/// Opens Google's popup and resolves with an access token.
-/// Throws [GoogleCancelled] if the user just closes the popup.
 Future<String> requestGoogleAccessToken(String clientId) async {
   await loadGoogleScript();
 

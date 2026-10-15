@@ -8,8 +8,6 @@ import 'auth_button.dart';
 
 const _otpLength = 6;
 
-/// Second step of sign-up / reset: type the 6-digit code that was emailed.
-/// Port of OtpVerification.jsx.
 class OtpVerification extends StatefulWidget {
   const OtpVerification({
     super.key,
@@ -25,15 +23,11 @@ class OtpVerification extends StatefulWidget {
 
   final String email;
 
-  /// Should throw (DioException) on a wrong code.
   final Future<void> Function(String otp) onVerify;
 
-  /// Resolves with the server response ({data: {resendAfterSeconds}}).
   final Future<Map<String, dynamic>> Function() onResend;
   final VoidCallback onBack;
 
-  /// Extra fields rendered under the code box (reset-password puts the
-  /// new-password fields here).
   final List<Widget> children;
   final String submitLabel;
   final bool submitDisabled;

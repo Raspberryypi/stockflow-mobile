@@ -15,7 +15,6 @@ import '../../widgets/user_avatar.dart';
 import '../auth/password_strength_meter.dart';
 import 'change_email_dialog.dart';
 
-/// Port of pages/profile/Profile.jsx.
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
 
@@ -122,8 +121,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     setState(() => _savingProfile = true);
     try {
-      // The name is saved normally. The email is deliberately NOT sent to the
-      // update endpoint: it can only change through the two-code verification.
       if (nameChanged) {
         final res = await UserService.updateUser(user.id, {'name': newName});
         _auth.updateCurrentUser({'name': (res['data'] as Map?)?['name'] ?? newName});
@@ -145,7 +142,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           _email.text = confirmed;
           setState(() => _profileSuccess = 'Email updated successfully.');
         } else {
-          // Put the field back to the account's real email.
           _email.text = _auth.user?.email ?? '';
           if (nameChanged) setState(() => _profileSuccess = 'Name updated. Email was not changed.');
         }

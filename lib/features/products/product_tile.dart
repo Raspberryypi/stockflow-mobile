@@ -6,10 +6,6 @@ import '../../widgets/status_chip.dart';
 
 enum ProductMenuAction { edit, archive, restore, deletePermanently }
 
-/// One row of the products list (replaces a row of ProductTable.jsx).
-/// - Normal view: tap = view, admin menu = Edit / Archive.
-/// - Archived view: admin menu = Restore / Delete permanently.
-/// - Selection mode (admin): a checkbox replaces the thumbnail.
 class ProductTile extends StatelessWidget {
   const ProductTile({
     super.key,

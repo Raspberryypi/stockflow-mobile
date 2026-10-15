@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import '../core/theme/palette.dart';
 
-/// Port of utils/transactionLabels.js.
 const kTypeLabel = {
   'STOCK_IN': 'Stock In',
   'STOCK_OUT': 'Stock Out',
   'TRANSFER': 'Transfer',
 };
 
-/// Filled chip colored by transaction type (success / neutral / info).
 class TransactionTypeChip extends StatelessWidget {
   const TransactionTypeChip(this.type, {super.key});
   final String type;

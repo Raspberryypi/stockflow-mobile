@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Port of ThemeModeContext (the dark-mode toggle part).
 class ThemeModeProvider extends ChangeNotifier {
   ThemeModeProvider(this._prefs)
       : _mode = _prefs.getString(_key) == 'dark' ? ThemeMode.dark : ThemeMode.light;

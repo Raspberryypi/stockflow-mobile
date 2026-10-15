@@ -12,7 +12,6 @@ import '../dashboard/stat_card.dart';
 
 const _periods = [7, 30, 90, 180, 365];
 
-/// Port of pages/reports/Reports.jsx.
 class ReportsScreen extends StatefulWidget {
   const ReportsScreen({super.key});
 
@@ -49,7 +48,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
     }
   }
 
-  // The selected period ("Last 30 days") becomes the printed date range.
   (String, String) get _period {
     final end = DateTime.now();
     return (formatDateInput(end.subtract(Duration(days: _days))), formatDateInput(end));
@@ -199,7 +197,6 @@ class _ReportsScreenState extends State<ReportsScreen> {
   Widget _valueChart(Map<String, dynamic> report) {
     final p = AppPalette.of(context);
     final series = asMapList(report['valueOverTime']);
-    // The server sends newest first; the chart reads left (old) to right (new).
     final points = [...series]..sort((a, b) => '${a['date']}'.compareTo('${b['date']}'));
     final spots = [
       for (var i = 0; i < points.length; i++) FlSpot(i.toDouble(), toNum(points[i]['value']).toDouble()),

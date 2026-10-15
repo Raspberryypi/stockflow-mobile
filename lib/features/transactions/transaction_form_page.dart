@@ -12,8 +12,6 @@ import 'product_picker_sheet.dart';
 
 const _stockOutReasons = ['Sold', 'Damaged', 'Returned to supplier', 'Other'];
 
-/// Port of TransactionFormDialog.jsx as a full-screen page.
-/// Pops with a short success message (e.g. "Stock in recorded") when saved.
 class TransactionFormPage extends StatefulWidget {
   const TransactionFormPage({super.key});
 
@@ -31,7 +29,7 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
 
   String _type = 'STOCK_IN';
   Map<String, dynamic>? _product;
-  Map<String, dynamic>? _stock; // per-location breakdown of the chosen product
+  Map<String, dynamic>? _stock;
   List<Map<String, dynamic>> _locations = [];
   String _reason = '';
   String _location = '';
@@ -75,8 +73,6 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
       _product = picked;
       _stock = null;
     });
-    // Show where this product's stock sits, so people can see what's available
-    // before choosing a location / transfer source.
     try {
       final res = await ProductService.getProductStock('${picked['_id']}');
       if (mounted && _product?['_id'] == picked['_id']) {
@@ -207,7 +203,6 @@ class _TransactionFormPageState extends State<TransactionFormPage> {
                   ),
                   const SizedBox(height: 16),
 
-                  // Product picker
                   InkWell(
                     borderRadius: BorderRadius.circular(10),
                     onTap: _pickProduct,

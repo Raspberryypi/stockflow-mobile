@@ -3,7 +3,6 @@ import '../core/theme/palette.dart';
 
 enum AlertSeverity { error, success, info, warning }
 
-/// Equivalent of MUI <Alert severity="...">.
 class AppAlert extends StatelessWidget {
   const AppAlert(this.message, {super.key, this.severity = AlertSeverity.error, this.onClose});
 

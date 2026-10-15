@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'palette.dart';
 
-/// Flutter port of the MUI theme in ThemeModeContext.jsx.
 ThemeData buildTheme(Brightness brightness) {
   final p = AppPalette.forBrightness(brightness);
 

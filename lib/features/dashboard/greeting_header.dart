@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../../core/theme/palette.dart';
 import '../../providers/auth_provider.dart';
 
-/// "Wednesday, October 7, 2026 / Welcome back, Kief!" block from the web header.
 class GreetingHeader extends StatelessWidget {
   const GreetingHeader({super.key});
 

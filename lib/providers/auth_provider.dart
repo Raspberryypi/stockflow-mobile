@@ -5,10 +5,8 @@ import '../core/storage/token_storage.dart';
 import '../models/app_user.dart';
 import '../services/auth_service.dart';
 
-/// Port of AuthContext.jsx.
 class AuthProvider extends ChangeNotifier {
   AuthProvider() {
-    // Global 401 handling (the axios response interceptor on the web).
     ApiClient.instance.onUnauthorized = _handleUnauthorized;
   }
 
@@ -19,8 +17,6 @@ class AuthProvider extends ChangeNotifier {
   bool get loading => _loading;
   bool get isAuthenticated => _user != null;
 
-  /// On launch, if a token exists, verify it against the backend and
-  /// restore the session instead of trusting stale stored data.
   Future<void> bootstrap() async {
     final token = await TokenStorage.getToken();
     if (token == null || token.isEmpty) {
@@ -66,8 +62,6 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Merge changes (e.g. a new avatar) into the logged-in user so the whole
-  /// app updates immediately.
   void updateCurrentUser(Map<String, dynamic> changes) {
     if (_user == null) return;
     _user = _user!.merge(changes);
@@ -94,7 +88,6 @@ class AuthProvider extends ChangeNotifier {
     try {
       await AuthService.logout();
     } catch (_) {
-      // Even if the server call fails we still sign out locally.
     } finally {
       try {
         if (!kIsWeb) await GoogleSignIn().signOut();

@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/theme/palette.dart';
 
-/// Port of components/common/ConfirmDialog.jsx.
-/// Shows a dialog; while [onConfirm] runs the buttons are disabled and the
-/// label reads "Please wait…". Closes itself when [onConfirm] finishes.
 Future<void> showConfirmDialog(
   BuildContext context, {
   String title = 'Are you sure?',

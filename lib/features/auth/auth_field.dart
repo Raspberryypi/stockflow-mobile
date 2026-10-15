@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../core/theme/palette.dart';
 
-/// Label-above text field (AuthField.jsx). Password fields get a show/hide toggle.
 class AuthField extends StatefulWidget {
   const AuthField({
     super.key,

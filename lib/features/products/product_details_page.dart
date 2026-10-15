@@ -11,9 +11,6 @@ import '../../widgets/app_alert.dart';
 import '../../widgets/page_container.dart';
 import '../../widgets/status_chip.dart';
 
-/// Port of ProductDetailsDialog.jsx as a full-screen page.
-/// Pops with the product map when "Edit" is tapped (admin only), otherwise
-/// pops with null.
 class ProductDetailsPage extends StatefulWidget {
   const ProductDetailsPage({super.key, required this.productId, this.canEdit = false});
   final String productId;
@@ -40,7 +37,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       _loading = true;
       _error = '';
     });
-    // Per-location stock is a nice-to-have: its failure must not hide the product.
     ProductService.getProductStock(widget.productId).then((res) {
       if (mounted) setState(() => _stock = asMap(res['data']));
     }).catchError((_) {
@@ -123,7 +119,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
     final unassigned = toNum(_stock?['unassigned']);
 
     return [
-      // Header: name, SKU, status
       Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -256,8 +251,6 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
   }
 }
 
-/// Renders the SKU's QR code as a PNG with a white quiet zone, so the saved
-/// file scans reliably once printed (the web's "Download PNG").
 Future<Uint8List> _qrPng(String data, {double size = 512, double margin = 32}) async {
   final recorder = ui.PictureRecorder();
   final canvas = Canvas(recorder);

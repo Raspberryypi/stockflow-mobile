@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/palette.dart';
 
-/// Which palette color a stat card uses (the web passes a MUI palette key).
 enum StatTone { primary, info, success, warning, error }
 
-/// Port of components/dashboard/StatCard.jsx.
 class StatCard extends StatelessWidget {
   const StatCard({
     super.key,
@@ -82,9 +80,6 @@ class StatCard extends StatelessWidget {
   }
 }
 
-/// Lays stat cards out in 2 / 3 / 5 columns depending on width
-/// (web: sm:grid-cols-2 lg:grid-cols-5). With 2 columns the odd last card
-/// spans the full width.
 class StatGrid extends StatelessWidget {
   const StatGrid({super.key, required this.cards});
   final List<Widget> cards;

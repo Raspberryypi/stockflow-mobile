@@ -30,9 +30,6 @@ String _numText(Object? v) {
   return n == n.roundToDouble() ? n.toInt().toString() : '$n';
 }
 
-/// Port of PurchaseOrderFormDialog.jsx as a full-screen page.
-/// Creates or edits a Draft PO, optionally prefilled from a reorder
-/// suggestion. Pops with the message to show once saved.
 class PurchaseOrderFormPage extends StatefulWidget {
   const PurchaseOrderFormPage({super.key, this.order, this.prefill});
   final Map<String, dynamic>? order;
@@ -46,7 +43,7 @@ class _PurchaseOrderFormPageState extends State<PurchaseOrderFormPage> {
   final _scroll = ScrollController();
   final _supplier = TextEditingController();
   final _notes = TextEditingController();
-  String _expectedDate = ''; // YYYY-MM-DD
+  String _expectedDate = '';
   String _location = '';
   List<_Line> _lines = [];
   List<Map<String, dynamic>> _locations = [];

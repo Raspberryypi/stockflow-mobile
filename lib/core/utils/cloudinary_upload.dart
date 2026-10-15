@@ -3,14 +3,10 @@ import 'package:image_picker/image_picker.dart';
 import '../../services/auth_service.dart';
 import '../../services/product_service.dart';
 
-/// Port of utils/productImageUpload.js + utils/cloudinaryUpload.js.
-/// The signature comes from our server (it holds the API secret); the file
-/// goes straight from the device/browser to Cloudinary.
-const productImageMaxBytes = 5 * 1024 * 1024; // 5 MB
+const productImageMaxBytes = 5 * 1024 * 1024;
 const _allowedExtensions = ['jpg', 'jpeg', 'png', 'webp'];
 const _allowedMimeTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
-/// Returns an error message if the file can't be used, otherwise ''.
 Future<String> validateProductImage(XFile file) async {
   final name = file.name.toLowerCase();
   final ext = name.contains('.') ? name.split('.').last : '';
@@ -24,16 +20,13 @@ Future<String> validateProductImage(XFile file) async {
   return '';
 }
 
-/// Uploads a product image to Cloudinary and resolves with its https URL.
 Future<String> uploadProductImage(XFile file) async {
   final sigRes = await ProductService.getProductImageSignature();
   return uploadToCloudinary(Map<String, dynamic>.from(sigRes['data'] as Map), file);
 }
 
-/// Port of utils/avatarUpload.js.
-const avatarMaxBytes = 2 * 1024 * 1024; // 2 MB
+const avatarMaxBytes = 2 * 1024 * 1024;
 
-/// Returns an error message if the file can't be used, otherwise ''.
 Future<String> validateAvatarImage(XFile file) async {
   final name = file.name.toLowerCase();
   final ext = name.contains('.') ? name.split('.').last : '';
@@ -47,8 +40,6 @@ Future<String> validateAvatarImage(XFile file) async {
   return '';
 }
 
-/// Uploads the picture to Cloudinary (signed by our server), saves the URL
-/// on the account, and resolves with the updated user data.
 Future<Map<String, dynamic>> uploadAvatar(XFile file) async {
   final sigRes = await AuthService.getAvatarUploadSignature();
   final url = await uploadToCloudinary(Map<String, dynamic>.from(sigRes['data'] as Map), file);
@@ -56,10 +47,6 @@ Future<Map<String, dynamic>> uploadAvatar(XFile file) async {
   return Map<String, dynamic>.from(saved['data'] as Map);
 }
 
-/// Sends [file] straight to Cloudinary with a signature from our server
-/// (which holds the API secret). Resolves with the https URL.
-/// Uses a plain Dio on purpose: the app's shared client would attach the
-/// login token and API base URL to a request that goes to Cloudinary.
 Future<String> uploadToCloudinary(Map<String, dynamic> sig, XFile file) async {
   final params = Map<String, dynamic>.from((sig['params'] as Map?) ?? const {});
   final bytes = await file.readAsBytes();

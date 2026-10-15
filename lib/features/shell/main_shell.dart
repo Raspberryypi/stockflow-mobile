@@ -12,7 +12,6 @@ import '../../widgets/user_avatar.dart';
 import '../search/global_search_page.dart';
 import 'notifications_sheet.dart';
 
-/// Titles for pages that live under the "More" tab.
 const _subPageTitles = {
   '/more/categories': 'Categories',
   '/more/locations': 'Locations',
@@ -22,10 +21,6 @@ const _subPageTitles = {
   '/more/users': 'Users',
 };
 
-/// Mobile replacement for MainLayout.jsx. The web's sidebar becomes:
-///   - bottom navigation (Dashboard, Scan, Products, Transactions, More)
-///   - a "More" tab holding the remaining pages + logout
-/// The top bar keeps the web header's tools: search, alerts bell, dark mode, avatar.
 class MainShell extends StatefulWidget {
   const MainShell({super.key, required this.shell});
   final StatefulNavigationShell shell;
@@ -41,8 +36,6 @@ class _MainShellState extends State<MainShell> {
   @override
   void initState() {
     super.initState();
-    // MainShell mounts once per authenticated session, so one interval here
-    // keeps the bell fresh across navigation (same 60s as the web).
     _refreshAlerts();
     _timer = Timer.periodic(const Duration(seconds: 60), (_) => _refreshAlerts());
   }
@@ -59,7 +52,6 @@ class _MainShellState extends State<MainShell> {
       if (!mounted) return;
       setState(() => _stats = AlertStats.fromDashboard(Map<String, dynamic>.from(res['data'] as Map)));
     } catch (_) {
-      // Silently ignore - the bell just won't update this cycle.
     }
   }
 

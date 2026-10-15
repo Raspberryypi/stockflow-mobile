@@ -1,9 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:stockflow_ims/core/utils/csv.dart';
 
-// The default counter test referred to a `MyApp` class that never existed,
-// so the test suite didn't compile. These cover the CSV round trip used by
-// Products > Import / Export.
 void main() {
   test('exported products CSV parses back into import rows', () {
     final csv = productsToCsv([

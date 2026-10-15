@@ -12,11 +12,6 @@ import '../../widgets/app_alert.dart';
 import '../../widgets/page_container.dart';
 import '../../widgets/status_chip.dart';
 
-/// Port of pages/scan/ScanProduct.jsx.
-/// Scan a product's QR/barcode (or type its SKU), see its details, and log a
-/// quick stock in/out. The camera starts only when you tap "Scan with camera"
-/// and stops as soon as a code is read, so it never runs in the background.
-/// In the browser (Edge) the camera is skipped: use the SKU box.
 class ScanScreen extends StatefulWidget {
   const ScanScreen({super.key});
 
@@ -46,8 +41,6 @@ class _ScanScreenState extends State<ScanScreen> {
     super.dispose();
   }
 
-  // ── Camera ─────────────────────────────────────────────────────
-
   void _startScan() {
     setState(() {
       _controller = MobileScannerController(detectionSpeed: DetectionSpeed.noDuplicates);
@@ -62,7 +55,6 @@ class _ScanScreenState extends State<ScanScreen> {
       _controller = null;
       _scanning = false;
     });
-    // Dispose after the scanner widget has left the tree.
     WidgetsBinding.instance.addPostFrameCallback((_) => old?.dispose());
   }
 
@@ -80,8 +72,6 @@ class _ScanScreenState extends State<ScanScreen> {
     _stopScan();
     _lookup(code);
   }
-
-  // ── Lookup / record ────────────────────────────────────────────
 
   Future<void> _lookup(String sku) async {
     setState(() {
@@ -138,7 +128,6 @@ class _ScanScreenState extends State<ScanScreen> {
       final label = _action == 'STOCK_OUT' ? 'Stock out' : 'Stock in';
       if (!mounted) return;
       setState(() => _success = '$label of $qty recorded for ${product['name']}.');
-      // Refresh the displayed quantity so it's clear it worked.
       final res = await ProductService.getProductBySku('${product['sku']}');
       if (mounted) setState(() => _product = asMap(res['data']));
     } catch (e) {
@@ -147,8 +136,6 @@ class _ScanScreenState extends State<ScanScreen> {
       if (mounted) setState(() => _recording = false);
     }
   }
-
-  // ── UI ─────────────────────────────────────────────────────────
 
   @override
   Widget build(BuildContext context) {

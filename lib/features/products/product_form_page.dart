@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,9 +10,6 @@ import '../../services/product_service.dart';
 import '../../widgets/app_alert.dart';
 import '../../widgets/page_container.dart';
 
-/// Port of ProductFormDialog.jsx as a full-screen page.
-/// [productId] null = Add, otherwise Edit (a fresh copy is fetched first).
-/// Pops with `true` once the product was saved.
 class ProductFormPage extends StatefulWidget {
   const ProductFormPage({super.key, this.productId, required this.categories});
   final String? productId;
@@ -38,8 +34,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
   bool _discontinued = false;
   String _imageUrl = '';
 
-  // Image chosen here but not uploaded yet: it is uploaded when Save is
-  // tapped, so cancelling never leaves an unused file behind.
   XFile? _pendingFile;
   Uint8List? _pendingBytes;
 
@@ -147,8 +141,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
       _error = '';
     });
 
-    // Upload a newly chosen image first. If saving then fails (e.g. duplicate
-    // SKU) the uploaded URL is kept, so a retry doesn't upload it again.
     var imageUrl = _imageUrl;
     final pending = _pendingFile;
     if (pending != null) {
@@ -182,7 +174,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
       'minimumStockLevel': int.parse(_minimum.text.trim()),
       'supplier': _supplier.text.trim(),
       'imageUrl': imageUrl,
-      // The backend re-derives the status unless it is Discontinued.
       'status': _discontinued ? 'Discontinued' : 'In Stock',
     };
 
@@ -397,8 +388,6 @@ class _ProductFormPageState extends State<ProductFormPage> {
   }
 }
 
-/// Tap-to-upload area: shows the newly picked image, else the saved one,
-/// else a prompt.
 class _ImageBox extends StatelessWidget {
   const _ImageBox({
     required this.bytes,

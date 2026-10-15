@@ -8,9 +8,6 @@ import '../../widgets/app_alert.dart';
 
 const _otpLength = 6;
 
-/// Port of components/users/ChangeEmailDialog.jsx: asks for the two codes
-/// needed to change the account email, one sent to the CURRENT address and
-/// one to the NEW address. Pops with the confirmed email, or null.
 Future<String?> showChangeEmailDialog(
   BuildContext context, {
   required String newEmail,

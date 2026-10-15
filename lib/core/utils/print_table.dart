@@ -3,7 +3,6 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import '../config/app_config.dart';
 
-/// One column of a printed table (same shape as the web's print columns).
 class PrintColumn<T> {
   const PrintColumn(this.header, this.value, {this.alignRight = false});
   final String header;
@@ -12,8 +11,6 @@ class PrintColumn<T> {
 }
 
 const _systemName = 'Inventory Management System';
-
-// ── Date helpers ('YYYY-MM-DD' strings, like the web's date inputs) ──
 
 DateTime? parseDateInput(String? value) {
   if (value == null || value.isEmpty) return null;
@@ -37,8 +34,6 @@ String _dateTime(DateTime d) {
   return '${_longDate(d)}, $h:$m ${d.hour < 12 ? 'AM' : 'PM'}';
 }
 
-/// Keeps rows whose date falls within [from, to] (whole days, inclusive).
-/// Rows with no date are dropped when a range is set.
 List<T> filterByDateRange<T>(List<T> rows, Object? Function(T) dateOf, String from, String to) {
   final start = parseDateInput(from);
   final end = parseDateInput(to);
@@ -70,9 +65,6 @@ String _describeRange(String from, String to, bool snapshot, String dateLabel) {
   return dateLabel.isNotEmpty && (start != null || end != null) ? '$text (by date $dateLabel)' : text;
 }
 
-/// Port of utils/printTable.js: builds a black-and-white A4 report (title,
-/// date range, who printed it, then the table, with the header repeated on
-/// every page) and opens the system print dialog, which can also save a PDF.
 Future<void> printTable<T>({
   required String title,
   String subtitle = '',
@@ -85,7 +77,6 @@ Future<void> printTable<T>({
   String printedBy = '',
   bool landscape = false,
 }) async {
-  // Helvetica has no peso sign, so use Noto Sans when it can be fetched.
   pw.ThemeData theme;
   var hasPeso = true;
   try {
@@ -110,7 +101,7 @@ Future<void> printTable<T>({
   final doc = pw.Document(title: '$title - ${formatDateInput(DateTime.now())}', theme: theme);
   doc.addPage(pw.MultiPage(
     pageFormat: landscape ? PdfPageFormat.a4.landscape : PdfPageFormat.a4,
-    margin: const pw.EdgeInsets.all(34), // ~12 mm
+    margin: const pw.EdgeInsets.all(34),
     header: (_) => pw.Container(
       padding: const pw.EdgeInsets.only(bottom: 8),
       margin: const pw.EdgeInsets.only(bottom: 8),

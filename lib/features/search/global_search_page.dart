@@ -7,9 +7,6 @@ import '../../widgets/status_chip.dart';
 
 const _minChars = 2;
 
-/// Mobile version of GlobalSearch.jsx: full-screen search (the web's inline
-/// autocomplete doesn't fit a phone header). Searches name / SKU as you type
-/// (300ms debounce) and opens the product on the Products screen.
 class GlobalSearchPage extends StatefulWidget {
   const GlobalSearchPage({super.key});
 

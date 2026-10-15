@@ -4,7 +4,6 @@ import '../../core/theme/palette.dart';
 import '../../models/alert_stats.dart';
 import '../../services/dashboard_service.dart';
 
-/// Bottom-sheet version of the bell dropdown menu in MainLayout.jsx.
 class NotificationsSheet extends StatefulWidget {
   const NotificationsSheet({super.key, required this.stats, required this.isAdmin});
   final AlertStats stats;
@@ -22,7 +21,6 @@ class _NotificationsSheetState extends State<NotificationsSheet> {
     try {
       await DashboardService.sendLowStockAlertNow();
     } catch (_) {
-      // Silent, same as the web.
     } finally {
       if (mounted) Navigator.of(context).pop();
     }

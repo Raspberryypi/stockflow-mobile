@@ -13,7 +13,6 @@ import '../../widgets/page_container.dart';
 import '../../widgets/permanent_delete_dialog.dart';
 import '../../widgets/print_table_button.dart';
 
-/// Port of pages/locations/LocationList.jsx.
 class LocationsScreen extends StatefulWidget {
   const LocationsScreen({super.key});
 
@@ -98,7 +97,6 @@ class _LocationsScreenState extends State<LocationsScreen> {
           showSnack(context, 'Location archived. You can restore it from the Archived tab.');
           _load();
         } catch (e) {
-          // e.g. "still holds N unit(s)" from the backend
           if (mounted) showSnack(context, apiErrorMessage(e, 'Failed to archive location'));
         }
       },
@@ -286,7 +284,6 @@ class _LocationsScreenState extends State<LocationsScreen> {
   }
 }
 
-/// Port of LocationFormDialog.jsx. Pops `true` once saved.
 class _LocationFormDialog extends StatefulWidget {
   const _LocationFormDialog({this.location});
   final Map<String, dynamic>? location;

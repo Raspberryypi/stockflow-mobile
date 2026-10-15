@@ -21,7 +21,6 @@ const _googleSvg = '''
 </svg>
 ''';
 
-/// "Or" divider + "Continue with Google" (SocialLogin.jsx).
 class SocialLogin extends StatefulWidget {
   const SocialLogin({super.key});
 
@@ -36,8 +35,6 @@ class _SocialLoginState extends State<SocialLogin> {
   @override
   void initState() {
     super.initState();
-    // Web only: preload Google's script so the popup can open straight from
-    // the click (browsers block popups that are opened after a delay).
     if (kIsWeb) {
       loadGoogleScript().catchError((_) {});
     }
@@ -50,27 +47,24 @@ class _SocialLoginState extends State<SocialLogin> {
     setState(() => _busy = true);
     try {
       if (kIsWeb) {
-        // Browser: Google Identity Services popup (same as the website).
         final accessToken = await requestGoogleAccessToken(AppConfig.googleClientId);
         await auth.loginWithGoogle(accessToken);
         router.go('/dashboard');
         return;
       }
-      // serverClientId = the *web* client id; this is what lets the server
-      // verify the token the same way it does for the website.
       final google = GoogleSignIn(
         scopes: const ['email', 'profile'],
         serverClientId: AppConfig.googleClientId,
       );
       final account = await google.signIn();
-      if (account == null) return; // user closed the picker = cancel, not an error
+      if (account == null) return;
       final tokens = await account.authentication;
       final accessToken = tokens.accessToken;
       if (accessToken == null) throw Exception('Google did not return an access token.');
       await auth.loginWithGoogle(accessToken);
       router.go('/dashboard');
     } on GoogleCancelled {
-      return; // popup closed = cancel, not an error
+      return;
     } on PlatformException catch (e) {
       if (e.code == 'sign_in_canceled') return;
       if (mounted) setState(() => _error = 'Google sign-in failed (${e.code}). Check the Google setup.');

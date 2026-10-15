@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../../core/theme/palette.dart';
 import '../../core/utils/terms_content.dart';
 
-/// Scrollable Terms & Conditions. Returns true if the user pressed "I agree".
 Future<bool> showTermsDialog(BuildContext context) async {
   final agreed = await showDialog<bool>(
     context: context,

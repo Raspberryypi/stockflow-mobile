@@ -4,7 +4,6 @@ class CategoryService {
   CategoryService._();
   static final _api = ApiClient.instance;
 
-  /// params: {'archived': true} lists archived categories (admin only).
   static Future<Map<String, dynamic>> getCategories([Map<String, dynamic>? params]) =>
       _api.get('/categories', params: params);
   static Future<Map<String, dynamic>> createCategory(Map<String, dynamic> payload) =>

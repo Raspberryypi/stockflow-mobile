@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
-/// Replaces localStorage('token' / 'user') from the web app.
 class TokenStorage {
   TokenStorage._();
   static const _storage = FlutterSecureStorage();

@@ -19,7 +19,6 @@ int _extractProductCount(String message) {
   return match == null ? 0 : int.parse(match.group(1)!);
 }
 
-/// Port of pages/categories/CategoryList.jsx.
 class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({super.key});
 
@@ -30,7 +29,7 @@ class CategoriesScreen extends StatefulWidget {
 class _CategoriesScreenState extends State<CategoriesScreen> {
   final _searchCtl = TextEditingController();
   bool _archived = false;
-  bool _sortDesc = false; // by name
+  bool _sortDesc = false;
   List<Map<String, dynamic>> _categories = [];
   bool _loading = true;
   String _error = '';
@@ -62,7 +61,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     }
   }
 
-  // Small, fully-fetched list: search and sort on the device.
   List<Map<String, dynamic>> get _visible {
     final term = _searchCtl.text.trim().toLowerCase();
     final list = term.isEmpty
@@ -96,8 +94,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     }
   }
 
-  // Archives (soft delete). If products still use the category the server
-  // answers 409 and we offer to move those products elsewhere first.
   Future<void> _archive(Map<String, dynamic> category) {
     return showConfirmDialog(
       context,
@@ -116,7 +112,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
           if (!mounted) return;
           final message = apiErrorMessage(e, '');
           if (e is DioException && e.response?.statusCode == 409) {
-            // Open the reassign dialog once the confirm dialog has closed.
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (mounted) _reassign(category, _extractProductCount(message));
             });
@@ -150,7 +145,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
       showSnack(context, '${res['message'] ?? 'Category restored'}');
       _load();
     } catch (e) {
-      // e.g. an active category now has the same name
       if (mounted) showSnack(context, apiErrorMessage(e, 'Failed to restore category'));
     }
   }
@@ -321,7 +315,6 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
   }
 }
 
-/// Port of CategoryFormDialog.jsx. Pops `true` once saved.
 class _CategoryFormDialog extends StatefulWidget {
   const _CategoryFormDialog({this.category});
   final Map<String, dynamic>? category;
@@ -411,8 +404,6 @@ class _CategoryFormDialogState extends State<_CategoryFormDialog> {
   }
 }
 
-/// Port of ReassignCategoryDialog.jsx. Pops `true` once products were moved
-/// and the category archived.
 class _ReassignCategoryDialog extends StatefulWidget {
   const _ReassignCategoryDialog({
     required this.category,

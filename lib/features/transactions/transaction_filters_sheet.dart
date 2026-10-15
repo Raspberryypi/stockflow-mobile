@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../widgets/transaction_type_chip.dart';
 
-/// Type + date range filters of TransactionList.jsx. Dates are 'yyyy-MM-dd'
-/// strings (what the API expects), empty when unset.
 class TransactionFilterValues {
   const TransactionFilterValues({this.type = '', this.startDate = '', this.endDate = ''});
   final String type;

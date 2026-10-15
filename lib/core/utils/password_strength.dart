@@ -1,4 +1,3 @@
-/// Port of src/utils/passwordStrength.js. Keep in sync with the server rules.
 class PasswordRule {
   const PasswordRule(this.id, this.label, this.met);
   final String id;
@@ -33,7 +32,6 @@ PasswordEvaluation evaluatePassword([String password = '']) {
   ];
   final metCount = rules.where((r) => r.met).length;
 
-  // Under 8 characters can never rate better than "Weak".
   var score = metCount;
   if (!rules[0].met && score > 2) score = 2;
   if (password.isEmpty) score = 0;

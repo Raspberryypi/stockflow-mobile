@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../core/theme/palette.dart';
 
-/// Filled chip colored by product status (same mapping as GlobalSearch.jsx).
 class StatusChip extends StatelessWidget {
   const StatusChip(this.status, {super.key});
   final String status;

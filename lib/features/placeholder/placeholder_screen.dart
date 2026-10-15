@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/palette.dart';
 
-/// Temporary screen for pages that are built in later batches.
 class PlaceholderScreen extends StatelessWidget {
   const PlaceholderScreen(this.title, {super.key, this.icon = Icons.construction_rounded});
   final String title;

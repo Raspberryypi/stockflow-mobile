@@ -13,7 +13,6 @@ import 'social_login.dart';
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key, this.verified = false, this.passwordReset = false, this.email});
 
-  /// Set by Register after email verification / by ForgotPassword after a reset.
   final bool verified;
   final bool passwordReset;
   final String? email;

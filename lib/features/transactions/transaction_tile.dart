@@ -3,7 +3,6 @@ import '../../core/theme/palette.dart';
 import '../../core/utils/format.dart';
 import '../../widgets/transaction_type_chip.dart';
 
-/// One transaction row (replaces a row of the 8-column web table).
 class TransactionTile extends StatelessWidget {
   const TransactionTile({super.key, required this.transaction});
   final Map<String, dynamic> transaction;

@@ -17,8 +17,6 @@ import 'transaction_tile.dart';
 
 const _pageSize = 10;
 
-/// Port of pages/transactions/TransactionList.jsx for mobile: search, type and
-/// date filters, infinite scroll, and "Record" (stock in / out / transfer).
 class TransactionsScreen extends StatefulWidget {
   const TransactionsScreen({super.key});
 
@@ -189,7 +187,6 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
 
   bool _exporting = false;
 
-  /// Every transaction matching the current filters, not just loaded pages.
   Future<List<Map<String, dynamic>>> _fetchAll({String? from, String? to}) async {
     final params = _params(1)
       ..remove('page')
@@ -366,7 +363,7 @@ class _TransactionsScreenState extends State<TransactionsScreen> {
   }
 
   Widget _buildList(AppPalette p) {
-    const padding = EdgeInsets.fromLTRB(16, 8, 16, 96); // room for the FAB
+    const padding = EdgeInsets.fromLTRB(16, 8, 16, 96);
 
     if (_loading && _items.isEmpty) {
       return ListView.separated(

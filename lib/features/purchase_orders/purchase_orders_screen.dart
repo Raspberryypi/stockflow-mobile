@@ -23,7 +23,6 @@ Color? _statusColor(String status) => switch (status) {
       _ => null,
     };
 
-/// Port of pages/purchaseOrders/PurchaseOrderList.jsx.
 class PurchaseOrdersScreen extends StatefulWidget {
   const PurchaseOrdersScreen({super.key});
 
@@ -89,7 +88,6 @@ class _PurchaseOrdersScreenState extends State<PurchaseOrdersScreen> {
   int get _totalSuggested =>
       _suggestions.fold(0, (sum, g) => sum + asMapList(g['items']).length);
 
-  // Status is filtered on the server; the text search runs on the device.
   List<Map<String, dynamic>> get _visible {
     final term = _searchCtl.text.trim().toLowerCase();
     if (term.isEmpty) return _orders;
@@ -419,8 +417,6 @@ class _PurchaseOrdersScreenState extends State<PurchaseOrdersScreen> {
   }
 }
 
-/// Port of ReceivePODialog.jsx: confirms receiving and lets the user
-/// override the order's put-away location. Pops the server's message.
 class _ReceiveDialog extends StatefulWidget {
   const _ReceiveDialog({required this.order});
   final Map<String, dynamic> order;
@@ -465,7 +461,6 @@ class _ReceiveDialogState extends State<_ReceiveDialog> {
   @override
   Widget build(BuildContext context) {
     final p = AppPalette.of(context);
-    // Keep the dropdown valid while locations load (or if one was archived).
     final known = _location.isEmpty || _locations.any((l) => '${l['_id']}' == _location);
     return AlertDialog(
       title: Text('Receive ${widget.order['poNumber']}',

@@ -4,7 +4,6 @@ class LocationService {
   LocationService._();
   static final _api = ApiClient.instance;
 
-  /// params: {'archived': true} lists archived locations (admin only).
   static Future<Map<String, dynamic>> getLocations([Map<String, dynamic>? params]) =>
       _api.get('/locations', params: params);
   static Future<Map<String, dynamic>> createLocation(Map<String, dynamic> payload) =>

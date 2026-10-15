@@ -20,36 +20,24 @@ import '../../providers/auth_provider.dart';
 
 const _publicPaths = {'/login', '/register', '/forgot-password'};
 
-/// Port of App.jsx routes + ProtectedRoute.jsx.
-///
-/// Web path            ->  Mobile path
-///   /dashboard            /dashboard           (tab 1)
-///   /scan                 /scan                (tab 2)
-///   /products             /products            (tab 3)
-///   /transactions         /transactions        (tab 4)
-///   /categories ... /users  /more/<name>       (tab 5 "More")
 GoRouter buildRouter(AuthProvider auth) {
   return GoRouter(
     initialLocation: '/splash',
-    // Re-evaluates `redirect` whenever login state changes (login, logout, 401).
     refreshListenable: auth,
     errorBuilder: (_, _) => const NotFoundScreen(),
     redirect: (context, state) {
       final loc = state.uri.path;
 
-      // Still verifying the stored token.
       if (auth.loading) return loc == '/splash' ? null : '/splash';
 
       if (!auth.isAuthenticated) {
         return _publicPaths.contains(loc) ? null : '/login';
       }
 
-      // Logged in: keep them out of the auth screens.
       if (_publicPaths.contains(loc) || loc == '/splash' || loc == '/') {
         return '/dashboard';
       }
 
-      // Frontend role check (the backend remains the real boundary).
       if (loc.startsWith('/more/users') && !(auth.user?.isAdmin ?? false)) {
         return '/dashboard';
       }
@@ -83,7 +71,6 @@ GoRouter buildRouter(AuthProvider auth) {
           StatefulShellBranch(routes: [
             GoRoute(
               path: '/products',
-              // Deep links: ?status=Low+Stock (notification bell), ?view=<id> (search).
               builder: (_, state) => ProductsScreen(
                 initialStatus: state.uri.queryParameters['status'],
                 viewId: state.uri.queryParameters['view'],

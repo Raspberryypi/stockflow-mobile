@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import '../../core/config/app_config.dart';
 import '../../core/theme/palette.dart';
 
-/// Phone version of AuthLayout.jsx. On the web the teal promo panel is
-/// hidden below 768px, so the phone layout is just the form column.
 class AuthLayout extends StatelessWidget {
   const AuthLayout({super.key, required this.title, this.subtitle, required this.child});
 

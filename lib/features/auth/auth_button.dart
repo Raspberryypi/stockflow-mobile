@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../core/theme/palette.dart';
 
-/// The 52px full-width button used across the auth screens.
 class AuthButton extends StatelessWidget {
   const AuthButton({super.key, required this.label, required this.onPressed});
   final String label;
@@ -29,7 +28,6 @@ class AuthButton extends StatelessWidget {
   }
 }
 
-/// Small bold link-styled text button ("Forgot password?", "Register"...).
 class AuthLink extends StatelessWidget {
   const AuthLink(this.label, {super.key, required this.onTap, this.fontSize = 12.5});
   final String label;
