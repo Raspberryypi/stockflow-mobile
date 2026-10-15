@@ -37,7 +37,7 @@ class _StockFlowAppState extends State<StockFlowApp> {
         ChangeNotifierProvider.value(value: _auth),
       ],
       child: Consumer<ThemeModeProvider>(
-        builder: (_, theme, __) => MaterialApp.router(
+        builder: (_, theme, _) => MaterialApp.router(
           title: AppConfig.brandName,
           debugShowCheckedModeBanner: false,
           theme: _light,

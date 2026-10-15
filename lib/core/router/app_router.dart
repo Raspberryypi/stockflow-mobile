@@ -5,8 +5,13 @@ import '../../features/auth/login_screen.dart';
 import '../../features/auth/register_screen.dart';
 import '../../features/dashboard/dashboard_screen.dart';
 import '../../features/placeholder/not_found_screen.dart';
-import '../../features/placeholder/placeholder_screen.dart';
+import '../../features/categories/categories_screen.dart';
+import '../../features/locations/locations_screen.dart';
 import '../../features/products/products_screen.dart';
+import '../../features/profile/profile_screen.dart';
+import '../../features/purchase_orders/purchase_orders_screen.dart';
+import '../../features/reports/reports_screen.dart';
+import '../../features/users/users_screen.dart';
 import '../../features/scan/scan_screen.dart';
 import '../../features/transactions/transactions_screen.dart';
 import '../../features/shell/main_shell.dart';
@@ -28,7 +33,7 @@ GoRouter buildRouter(AuthProvider auth) {
     initialLocation: '/splash',
     // Re-evaluates `redirect` whenever login state changes (login, logout, 401).
     refreshListenable: auth,
-    errorBuilder: (_, __) => const NotFoundScreen(),
+    errorBuilder: (_, _) => const NotFoundScreen(),
     redirect: (context, state) {
       final loc = state.uri.path;
 
@@ -51,7 +56,7 @@ GoRouter buildRouter(AuthProvider auth) {
       return null;
     },
     routes: [
-      GoRoute(path: '/splash', builder: (_, __) => const _Splash()),
+      GoRoute(path: '/splash', builder: (_, _) => const _Splash()),
       GoRoute(
         path: '/login',
         builder: (_, state) {
@@ -63,17 +68,17 @@ GoRouter buildRouter(AuthProvider auth) {
           );
         },
       ),
-      GoRoute(path: '/register', builder: (_, __) => const RegisterScreen()),
-      GoRoute(path: '/forgot-password', builder: (_, __) => const ForgotPasswordScreen()),
+      GoRoute(path: '/register', builder: (_, _) => const RegisterScreen()),
+      GoRoute(path: '/forgot-password', builder: (_, _) => const ForgotPasswordScreen()),
 
       StatefulShellRoute.indexedStack(
-        builder: (_, __, shell) => MainShell(shell: shell),
+        builder: (_, _, shell) => MainShell(shell: shell),
         branches: [
           StatefulShellBranch(routes: [
-            GoRoute(path: '/dashboard', builder: (_, __) => const DashboardScreen()),
+            GoRoute(path: '/dashboard', builder: (_, _) => const DashboardScreen()),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/scan', builder: (_, __) => const ScanScreen()),
+            GoRoute(path: '/scan', builder: (_, _) => const ScanScreen()),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(
@@ -86,19 +91,19 @@ GoRouter buildRouter(AuthProvider auth) {
             ),
           ]),
           StatefulShellBranch(routes: [
-            GoRoute(path: '/transactions', builder: (_, __) => const TransactionsScreen()),
+            GoRoute(path: '/transactions', builder: (_, _) => const TransactionsScreen()),
           ]),
           StatefulShellBranch(routes: [
             GoRoute(
               path: '/more',
-              builder: (_, __) => const MoreScreen(),
+              builder: (_, _) => const MoreScreen(),
               routes: [
-                GoRoute(path: 'categories', builder: (_, __) => const PlaceholderScreen('Categories', icon: Icons.category_rounded)),
-                GoRoute(path: 'locations', builder: (_, __) => const PlaceholderScreen('Locations', icon: Icons.place_rounded)),
-                GoRoute(path: 'purchase-orders', builder: (_, __) => const PlaceholderScreen('Purchase Orders', icon: Icons.local_shipping_rounded)),
-                GoRoute(path: 'reports', builder: (_, __) => const PlaceholderScreen('Reports', icon: Icons.assessment_rounded)),
-                GoRoute(path: 'profile', builder: (_, __) => const PlaceholderScreen('Profile', icon: Icons.person_rounded)),
-                GoRoute(path: 'users', builder: (_, __) => const PlaceholderScreen('Users', icon: Icons.people_rounded)),
+                GoRoute(path: 'categories', builder: (_, _) => const CategoriesScreen()),
+                GoRoute(path: 'locations', builder: (_, _) => const LocationsScreen()),
+                GoRoute(path: 'purchase-orders', builder: (_, _) => const PurchaseOrdersScreen()),
+                GoRoute(path: 'reports', builder: (_, _) => const ReportsScreen()),
+                GoRoute(path: 'profile', builder: (_, _) => const ProfileScreen()),
+                GoRoute(path: 'users', builder: (_, _) => const UsersScreen()),
               ],
             ),
           ]),

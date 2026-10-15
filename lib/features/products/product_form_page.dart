@@ -421,7 +421,7 @@ class _ImageBox extends StatelessWidget {
     } else if (url.isNotEmpty) {
       content = Image.network(url,
           fit: BoxFit.contain,
-          errorBuilder: (_, __, ___) =>
+          errorBuilder: (_, _, _) =>
               Icon(Icons.broken_image_outlined, color: p.textSecondary, size: 36));
     } else {
       content = Column(
