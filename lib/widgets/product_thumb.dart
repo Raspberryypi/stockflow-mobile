@@ -27,7 +27,7 @@ class ProductThumb extends StatelessWidget {
               ? Image.network(
                   url!,
                   fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => placeholder,
+                  errorBuilder: (_, _, _) => placeholder,
                   loadingBuilder: (context, child, progress) =>
                       progress == null ? child : placeholder,
                 )

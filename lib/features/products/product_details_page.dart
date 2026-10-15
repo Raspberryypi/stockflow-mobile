@@ -1,7 +1,10 @@
+import 'dart:typed_data';
+import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../core/network/api_client.dart';
 import '../../core/theme/palette.dart';
+import '../../core/utils/file_export.dart';
 import '../../core/utils/format.dart';
 import '../../services/product_service.dart';
 import '../../widgets/app_alert.dart';
@@ -52,6 +55,20 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       setState(() => _error = apiErrorMessage(e, 'Failed to load product.'));
     } finally {
       if (mounted) setState(() => _loading = false);
+    }
+  }
+
+  Future<void> _downloadQr(String sku) async {
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      final saved = await saveOrShareFile(
+        fileName: '$sku-qr.png',
+        bytes: await _qrPng(sku),
+        mimeType: 'image/png',
+      );
+      if (saved) messenger.showSnackBar(const SnackBar(content: Text('QR code saved.')));
+    } catch (_) {
+      messenger.showSnackBar(const SnackBar(content: Text('Could not save the QR code.')));
     }
   }
 
@@ -140,7 +157,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
             child: Image.network(
               imageUrl,
               fit: BoxFit.contain,
-              errorBuilder: (_, __, ___) =>
+              errorBuilder: (_, _, _) =>
                   Icon(Icons.broken_image_outlined, color: p.textSecondary, size: 36),
             ),
           ),
@@ -220,6 +237,12 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
               const SizedBox(height: 8),
               Text('Encodes SKU: $sku',
                   style: TextStyle(fontSize: 12.5, color: p.textSecondary)),
+              const SizedBox(height: 8),
+              OutlinedButton.icon(
+                onPressed: () => _downloadQr(sku),
+                icon: const Icon(Icons.download_rounded, size: 18),
+                label: const Text('Download PNG'),
+              ),
               const SizedBox(height: 4),
               Text('Print this on a label, then use Scan Product to look it up or log stock.',
                   textAlign: TextAlign.center,
@@ -231,6 +254,26 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       const SizedBox(height: 24),
     ];
   }
+}
+
+/// Renders the SKU's QR code as a PNG with a white quiet zone, so the saved
+/// file scans reliably once printed (the web's "Download PNG").
+Future<Uint8List> _qrPng(String data, {double size = 512, double margin = 32}) async {
+  final recorder = ui.PictureRecorder();
+  final canvas = Canvas(recorder);
+  final total = size + margin * 2;
+  canvas.drawRect(Rect.fromLTWH(0, 0, total, total), Paint()..color = Colors.white);
+  canvas.translate(margin, margin);
+  QrPainter(
+    data: data,
+    version: QrVersions.auto,
+    eyeStyle: const QrEyeStyle(eyeShape: QrEyeShape.square, color: Colors.black),
+    dataModuleStyle:
+        const QrDataModuleStyle(dataModuleShape: QrDataModuleShape.square, color: Colors.black),
+  ).paint(canvas, Size(size, size));
+  final image = await recorder.endRecording().toImage(total.toInt(), total.toInt());
+  final bytes = await image.toByteData(format: ui.ImageByteFormat.png);
+  return bytes!.buffer.asUint8List();
 }
 
 class _Field extends StatelessWidget {

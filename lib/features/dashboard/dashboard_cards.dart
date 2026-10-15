@@ -2,14 +2,17 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import '../../core/theme/palette.dart';
 import '../../core/utils/format.dart';
+import '../../core/utils/print_table.dart';
+import '../../widgets/print_table_button.dart';
 import '../../widgets/status_chip.dart';
 import '../../widgets/transaction_type_chip.dart';
 
 /// Shared "card with a title" frame used by the three dashboard sections.
 class _SectionCard extends StatelessWidget {
-  const _SectionCard({required this.title, required this.child});
+  const _SectionCard({required this.title, required this.child, this.action});
   final String title;
   final Widget child;
+  final Widget? action;
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +23,19 @@ class _SectionCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(title,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w700)),
-            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(title,
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium
+                          ?.copyWith(fontWeight: FontWeight.w700)),
+                ),
+                ?action,
+              ],
+            ),
+            SizedBox(height: action == null ? 12 : 4),
             child,
           ],
         ),
@@ -147,6 +157,20 @@ class LowStockList extends StatelessWidget {
     final p = AppPalette.of(context);
     return _SectionCard(
       title: 'Low & Out of Stock',
+      action: products.isEmpty
+          ? null
+          : PrintTableButton<Map<String, dynamic>>(
+              snapshot: true,
+              title: 'Low & Out of Stock Products',
+              columns: [
+                PrintColumn('Product', (p) => p['name']),
+                PrintColumn('SKU', (p) => p['sku']),
+                PrintColumn('Qty', (p) => p['quantity'], alignRight: true),
+                PrintColumn('Min', (p) => p['minimumStockLevel'], alignRight: true),
+                PrintColumn('Status', (p) => p['status']),
+              ],
+              getRows: (_, _) async => products,
+            ),
       child: products.isEmpty
           ? const _EmptyState(
               icon: Icons.inventory_rounded, message: 'All products are sufficiently stocked.')
@@ -198,6 +222,20 @@ class RecentTransactionsList extends StatelessWidget {
     final p = AppPalette.of(context);
     return _SectionCard(
       title: 'Recent Transactions',
+      action: transactions.isEmpty
+          ? null
+          : PrintTableButton<Map<String, dynamic>>(
+              snapshot: true,
+              title: 'Recent Transactions',
+              columns: [
+                PrintColumn('Product', (t) => asMap(t['product'])['name']),
+                PrintColumn('Type', (t) => kTypeLabel[t['type']] ?? t['type']),
+                PrintColumn('Qty', (t) => t['quantity'], alignRight: true),
+                PrintColumn('By', (t) => asMap(t['performedBy'])['name']),
+                PrintColumn('Date', (t) => formatDateTime(t['createdAt'])),
+              ],
+              getRows: (_, _) async => transactions,
+            ),
       child: transactions.isEmpty
           ? const _EmptyState(
               icon: Icons.swap_horiz_rounded, message: 'No inventory movements yet.')

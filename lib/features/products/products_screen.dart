@@ -1,10 +1,15 @@
 import 'dart:async';
+import 'dart:convert';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../core/network/api_client.dart';
 import '../../core/theme/palette.dart';
+import '../../core/utils/csv.dart';
+import '../../core/utils/file_export.dart';
 import '../../core/utils/format.dart';
+import '../../core/utils/print_table.dart';
 import '../../providers/auth_provider.dart';
 import '../../services/category_service.dart';
 import '../../services/product_service.dart';
@@ -13,6 +18,7 @@ import '../../widgets/bulk_category_dialog.dart';
 import '../../widgets/confirm_dialog.dart';
 import '../../widgets/page_container.dart';
 import '../../widgets/permanent_delete_dialog.dart';
+import '../../widgets/print_table_button.dart';
 import 'product_details_page.dart';
 import 'product_filters_sheet.dart';
 import 'product_form_page.dart';
@@ -82,6 +88,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
   final Set<String> _selected = {};
 
   String? _openingViewId;
+
+  bool _exporting = false;
+  bool _importing = false;
 
   bool get _isAdmin => context.read<AuthProvider>().user?.isAdmin ?? false;
   bool get _selecting => _selected.isNotEmpty;
@@ -429,6 +438,102 @@ class _ProductsScreenState extends State<ProductsScreen> {
     );
   }
 
+  // ── Export / import / print (ProductList.jsx toolbar) ──────────
+
+  /// Every product matching the current filters, not just the loaded pages.
+  Future<List<Map<String, dynamic>>> _fetchAllMatching(int limit) async {
+    final params = _params(1)
+      ..remove('page')
+      ..['limit'] = limit;
+    final res = await ProductService.getProducts(params);
+    return asMapList(res['data']);
+  }
+
+  Future<void> _export() async {
+    setState(() => _exporting = true);
+    try {
+      final rows = await _fetchAllMatching(1000);
+      final saved = await saveOrShareFile(
+        fileName: datedFileName('inventory-export', 'csv'),
+        bytes: csvBytes(productsToCsv(rows)),
+        mimeType: 'text/csv',
+      );
+      if (saved) _snack('Exported ${rows.length} product(s) to CSV.');
+    } catch (_) {
+      _snack('Failed to export products');
+    } finally {
+      if (mounted) setState(() => _exporting = false);
+    }
+  }
+
+  Future<void> _import() async {
+    PlatformFile? file;
+    try {
+      file = await FilePicker.pickFile(type: FileType.custom, allowedExtensions: ['csv']);
+    } catch (_) {
+      _snack('Could not open the file picker.');
+      return;
+    }
+    if (file == null) return;
+
+    setState(() => _importing = true);
+    try {
+      final text = utf8.decode(await file.readAsBytes(), allowMalformed: true);
+      final rows = parseProductsCsv(text);
+      final res = await ProductService.bulkImportProducts(rows);
+      final data = asMap(res['data']);
+      final created = toNum(data['createdCount']).toInt();
+      final errors = asMapList(data['errors']);
+      if (errors.isNotEmpty) {
+        _snack('Imported $created product(s). ${errors.length} row(s) failed '
+            '(e.g. row ${errors.first['row']}: ${errors.first['message']}).');
+      } else {
+        _snack('Imported $created product(s) successfully.');
+      }
+      _load();
+    } on FormatException catch (e) {
+      _snack(e.message);
+    } catch (e) {
+      _snack(apiErrorMessage(e, 'Failed to import CSV'));
+    } finally {
+      if (mounted) setState(() => _importing = false);
+    }
+  }
+
+  void _print() {
+    final categoryName = _category.isEmpty
+        ? ''
+        : '${_categories.firstWhere((c) => '${c['_id']}' == _category, orElse: () => {})['name'] ?? ''}';
+    Object? printDate(Map<String, dynamic> p) => _archived ? p['deletedAt'] : p['createdAt'];
+    startPrintTable<Map<String, dynamic>>(
+      context,
+      title: _archived ? 'Archived Products' : 'Products',
+      subtitle: [
+        if (_archived) 'Archived products',
+        if (_search.isNotEmpty) 'Search: "$_search"',
+        if (_category.isNotEmpty) 'Category: $categoryName',
+        if (_status.isNotEmpty) 'Status: $_status',
+        if (_supplier.isNotEmpty) 'Supplier: $_supplier',
+      ].join('  |  '),
+      columns: [
+        PrintColumn('Name', (p) => p['name']),
+        PrintColumn('SKU', (p) => p['sku']),
+        PrintColumn('Category', (p) => asMap(p['category'])['name']),
+        PrintColumn('Price', (p) => formatCurrency(toNum(p['price'])), alignRight: true),
+        PrintColumn('Qty', (p) => p['quantity'], alignRight: true),
+        PrintColumn('Min', (p) => p['minimumStockLevel'], alignRight: true),
+        PrintColumn('Status', (p) => p['status']),
+        PrintColumn('Supplier', (p) => p['supplier']),
+        PrintColumn(_archived ? 'Archived on' : 'Created',
+            (p) => printDate(p) == null ? '' : formatDate(printDate(p))),
+      ],
+      getRows: (_, _) => _fetchAllMatching(5000),
+      dateOf: printDate,
+      dateLabel: _archived ? 'archived' : 'created',
+      landscape: true,
+    );
+  }
+
   // ── UI ─────────────────────────────────────────────────────────
 
   @override
@@ -525,6 +630,41 @@ class _ProductsScreenState extends State<ProductsScreen> {
                             ),
                         ],
                       ),
+                      PopupMenuButton<String>(
+                        tooltip: 'More actions',
+                        icon: (_exporting || _importing)
+                            ? const SizedBox(
+                                width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2))
+                            : const Icon(Icons.more_vert_rounded),
+                        enabled: !_exporting && !_importing,
+                        onSelected: (a) {
+                          switch (a) {
+                            case 'import':
+                              _import();
+                            case 'export':
+                              _export();
+                            case 'print':
+                              _print();
+                          }
+                        },
+                        itemBuilder: (_) => [
+                          if (isAdmin && !_archived)
+                            const PopupMenuItem(
+                              value: 'import',
+                              child: ListTile(
+                                  leading: Icon(Icons.file_upload_outlined), title: Text('Import CSV')),
+                            ),
+                          const PopupMenuItem(
+                            value: 'export',
+                            child: ListTile(
+                                leading: Icon(Icons.file_download_outlined), title: Text('Export CSV')),
+                          ),
+                          const PopupMenuItem(
+                            value: 'print',
+                            child: ListTile(leading: Icon(Icons.print_outlined), title: Text('Print')),
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                   if (!_loading && _error.isEmpty)
@@ -610,8 +750,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
         physics: const AlwaysScrollableScrollPhysics(),
         padding: padding,
         itemCount: 6,
-        separatorBuilder: (_, __) => const SizedBox(height: 10),
-        itemBuilder: (_, __) => Container(
+        separatorBuilder: (_, _) => const SizedBox(height: 10),
+        itemBuilder: (_, _) => Container(
           height: 76,
           decoration: BoxDecoration(color: p.divider, borderRadius: BorderRadius.circular(16)),
         ),
@@ -660,7 +800,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       physics: const AlwaysScrollableScrollPhysics(),
       padding: padding,
       itemCount: _products.length + (hasMore ? 1 : 0),
-      separatorBuilder: (_, __) => const SizedBox(height: 10),
+      separatorBuilder: (_, _) => const SizedBox(height: 10),
       itemBuilder: (context, i) {
         if (i >= _products.length) {
           return Padding(
